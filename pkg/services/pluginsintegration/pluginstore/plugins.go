@@ -1,6 +1,7 @@
 package pluginstore
 
 import (
+	"github.com/grafana/grafana-app-sdk/app"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 
 	"github.com/grafana/grafana/pkg/plugins"
@@ -39,6 +40,8 @@ type Plugin struct {
 	ExternalService *auth.ExternalService
 
 	Translations map[string]string
+
+	AppSDKManifests []app.Manifest
 }
 
 func (p Plugin) SupportsStreaming() bool {
@@ -82,6 +85,7 @@ func ToGrafanaDTO(p *plugins.Plugin) Plugin {
 		ExternalService:   p.ExternalService,
 		Angular:           p.Angular,
 		Translations:      p.Translations,
+		AppSDKManifests:   p.AppSDKManifests,
 	}
 
 	if p.Parent != nil {

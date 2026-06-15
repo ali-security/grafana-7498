@@ -12,6 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
 
+	"github.com/grafana/grafana-app-sdk/app"
 	"github.com/grafana/grafana/pkg/infra/tracing"
 	"github.com/grafana/grafana/pkg/plugins"
 	"github.com/grafana/grafana/pkg/plugins/auth"
@@ -1154,6 +1155,62 @@ func TestLoader_Load_Angular(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestLoader_Load_AppSDKManifest(t *testing.T) {
+	pluginDir := filepath.Join(testDataDir(t), "test-app-with-sdk-manifest")
+
+	t.Run("loads and parses app-sdk manifest when feature enabled", func(t *testing.T) {
+		cfg := &config.PluginManagementCfg{
+			DevMode: true,
+			Features: config.Features{
+				AppSDKManifestEnabled: true,
+			},
+		}
+		reg := pluginfakes.NewFakePluginRegistry()
+		procPrvdr := pluginfakes.NewFakeBackendProcessProvider()
+		procMgr := pluginfakes.NewFakeProcessManager()
+		errTracker := pluginerrs.ProvideErrorTracker()
+
+		l := newLoader(t, cfg, reg, procMgr, procPrvdr, errTracker, pluginassets.NewLocalProvider())
+		got, err := l.Load(context.Background(), sources.NewLocalSource(plugins.ClassExternal, []string{pluginDir}))
+		require.NoError(t, err)
+		require.Len(t, got, 1)
+
+		p := got[0]
+		require.Equal(t, "test-app-with-sdk-manifest", p.ID)
+		require.Len(t, p.AppSDKManifests, 1)
+
+		m := p.AppSDKManifests[0]
+		require.Equal(t, app.ManifestLocationEmbedded, m.Location.Type)
+		require.NotNil(t, m.ManifestData)
+		require.Equal(t, "test-app-with-sdk-manifest", m.ManifestData.AppName)
+		require.Equal(t, "testappwithsdkmanifest.ext.grafana.com", m.ManifestData.Group)
+		require.Len(t, m.ManifestData.Versions, 1)
+		require.Equal(t, "v1", m.ManifestData.Versions[0].Name)
+	})
+
+	t.Run("does not parse app-sdk manifest when feature disabled", func(t *testing.T) {
+		cfg := &config.PluginManagementCfg{
+			DevMode: true,
+			Features: config.Features{
+				AppSDKManifestEnabled: false,
+			},
+		}
+		reg := pluginfakes.NewFakePluginRegistry()
+		procPrvdr := pluginfakes.NewFakeBackendProcessProvider()
+		procMgr := pluginfakes.NewFakeProcessManager()
+		errTracker := pluginerrs.ProvideErrorTracker()
+
+		l := newLoader(t, cfg, reg, procMgr, procPrvdr, errTracker, pluginassets.NewLocalProvider())
+		got, err := l.Load(context.Background(), sources.NewLocalSource(plugins.ClassExternal, []string{pluginDir}))
+		require.NoError(t, err)
+		require.Len(t, got, 1)
+
+		p := got[0]
+		require.Equal(t, "test-app-with-sdk-manifest", p.ID)
+		require.Empty(t, p.AppSDKManifests)
+	})
 }
 
 func TestLoader_Load_NestedPlugins(t *testing.T) {
