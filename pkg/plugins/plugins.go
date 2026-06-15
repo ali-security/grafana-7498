@@ -12,6 +12,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/grafana/grafana-app-sdk/app"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 
 	"github.com/grafana/grafana/pkg/apimachinery/identity"
@@ -63,6 +64,8 @@ type Plugin struct {
 	mu sync.Mutex
 
 	Translations map[string]string
+
+	AppSDKManifests []app.Manifest
 }
 
 var (
@@ -135,6 +138,10 @@ type JSONData struct {
 
 	// Build mode of the plugin (set automatically at build time)
 	BuildMode string `json:"buildMode,omitempty"`
+
+	// AppSDKManifest is a list of paths to app-sdk manifest JSON files in the plugin bundle.
+	// Each file is expected to contain an AppManifest custom resource that yields an app.ManifestData.
+	AppSDKManifest []string `json:"app-sdk-manifest,omitempty"`
 }
 
 func ReadPluginJSON(reader io.Reader) (JSONData, error) {

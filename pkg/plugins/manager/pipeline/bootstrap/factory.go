@@ -1,9 +1,15 @@
 package bootstrap
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
+	"io/fs"
 	"net/url"
 	"path"
+
+	"github.com/grafana/grafana-app-sdk/app"
+	appmanifest "github.com/grafana/grafana-app-sdk/app/appmanifest/v1alpha2"
 
 	"github.com/grafana/grafana/pkg/plugins"
 	"github.com/grafana/grafana/pkg/plugins/config"
@@ -83,6 +89,12 @@ func (f *DefaultPluginFactory) newPlugin(p plugins.FoundPlugin, class plugins.Cl
 		return nil, err
 	}
 
+	if f.features.AppSDKManifestEnabled {
+		if err := setAppSDKManifests(plugin); err != nil {
+			return nil, err
+		}
+	}
+
 	return plugin, nil
 }
 
@@ -140,4 +152,46 @@ func getTranslations(assetProvider pluginassets.Provider, n pluginassets.PluginI
 	}
 
 	return translations, nil
+}
+
+func setAppSDKManifests(p *plugins.Plugin) error {
+	if len(p.AppSDKManifest) == 0 {
+		return nil
+	}
+
+	manifests := make([]app.Manifest, 0, len(p.AppSDKManifest))
+	for _, manifestPath := range p.AppSDKManifest {
+		m, err := readAppSDKManifest(p.FS, manifestPath)
+		if err != nil {
+			if errors.Is(err, fs.ErrNotExist) {
+				p.Logger().Warn("App SDK manifest file not found, skipping", "path", manifestPath)
+				continue
+			}
+			return fmt.Errorf("reading app-sdk manifest %q: %w", manifestPath, err)
+		}
+		manifests = append(manifests, m)
+	}
+
+	p.AppSDKManifests = manifests
+	return nil
+}
+
+func readAppSDKManifest(pluginFS plugins.FS, name string) (app.Manifest, error) {
+	f, err := pluginFS.Open(name)
+	if err != nil {
+		return app.Manifest{}, fmt.Errorf("opening %s: %w", name, err)
+	}
+	defer f.Close() //nolint:errcheck
+
+	var cr appmanifest.AppManifest
+	if err := json.NewDecoder(f).Decode(&cr); err != nil {
+		return app.Manifest{}, fmt.Errorf("decoding AppManifest CR: %w", err)
+	}
+
+	data, err := cr.Spec.ToManifestData()
+	if err != nil {
+		return app.Manifest{}, fmt.Errorf("converting AppManifestSpec to ManifestData: %w", err)
+	}
+
+	return app.NewEmbeddedManifest(data), nil
 }

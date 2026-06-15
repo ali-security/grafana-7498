@@ -3894,6 +3894,20 @@
     },
     {
       "metadata": {
+        "name": "plugins.appSDKManifest",
+        "resourceVersion": "1781525468906",
+        "creationTimestamp": "2026-06-15T12:11:08Z"
+      },
+      "spec": {
+        "description": "Enables reading and parsing app-sdk manifest files from plugin bundles",
+        "stage": "experimental",
+        "codeowner": "@grafana/grafana-app-platform-squad",
+        "hideFromDocs": true,
+        "expression": "false"
+      }
+    },
+    {
+      "metadata": {
         "name": "plugins.initDataSourcesAsync",
         "resourceVersion": "1779789947610",
         "creationTimestamp": "2026-05-26T10:05:47Z"

@@ -30,8 +30,9 @@ func ProvidePluginManagementConfig(cfg *setting.Cfg, settingProvider setting.Pro
 		cfg.AppURL,
 		//nolint:staticcheck // not yet migrated to OpenFeature
 		config.Features{
-			SriChecksEnabled:     features.IsEnabledGlobally(featuremgmt.FlagPluginsSriChecks),
-			TempoAlertingEnabled: features.IsEnabledGlobally(featuremgmt.FlagTempoAlerting),
+			SriChecksEnabled:      features.IsEnabledGlobally(featuremgmt.FlagPluginsSriChecks),
+			TempoAlertingEnabled:  features.IsEnabledGlobally(featuremgmt.FlagTempoAlerting),
+			AppSDKManifestEnabled: features.IsEnabledGlobally(featuremgmt.FlagPluginsAppSDKManifest),
 		},
 		cfg.GrafanaComAPIURL,
 		cfg.DisablePlugins,

@@ -30,7 +30,8 @@ type Features struct {
 	LocalizationForPlugins bool
 	// Needed only until Tempo Alerting / metrics TraceQL is stable
 	// https://github.com/grafana/grafana/issues/106888
-	TempoAlertingEnabled bool
+	TempoAlertingEnabled       bool
+	AppSDKManifestEnabled bool
 }
 
 // PluginSettings maps plugin id to map of key/value settings.

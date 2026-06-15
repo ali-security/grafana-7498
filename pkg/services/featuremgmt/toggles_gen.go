@@ -973,4 +973,8 @@ const (
 	// FlagFrontendServiceReducedBootDataAPI
 	// Frontend Service doesn't rely on the /bootdata API, instead loads configuration as needed
 	FlagFrontendServiceReducedBootDataAPI = "frontendService.reducedBootDataAPI"
+
+	// FlagPluginsAppSDKManifest
+	// Enables reading and parsing app-sdk manifest files from plugin bundles
+	FlagPluginsAppSDKManifest = "plugins.appSDKManifest"
 )
