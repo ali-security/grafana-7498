@@ -16,7 +16,7 @@ import {
 import { useStyles2, useTheme2 } from '../../../themes/ThemeContext';
 import { getTextColorForBackground as _getTextColorForBackground } from '../../../utils/colors';
 import { usePanelContext } from '../../PanelChrome';
-import { type DataLinksActionsTooltipState } from '../utils';
+import { type DataLinksActionsTooltipState } from '../cellUtils';
 
 import { TableDataGrid } from './TableDataGrid';
 import { EmptyTablePlaceholder } from './components/EmptyTablePlaceholder';
@@ -214,7 +214,21 @@ export function TableNested(props: TableNGProps & { nestedFramesField: Field<Dat
     [theme]
   );
 
-  const [widths] = useColWidths(visibleFields, availableWidth, frozenColumns);
+  // When a width override is removed from field config, the configured-width count drops. That
+  // change to field.config.custom.width is a mutation on the existing field objects, so it doesn't
+  // re-trigger memoization on its own. We detect the drop here and pass a fresh reset key to force
+  // recomputation and clear react-data-grid's internal column widths so columns re-flow to auto.
+  const configuredWidthCount = visibleFields.reduce(
+    (count, field) => count + (field.config.custom?.width != null ? 1 : 0),
+    0
+  );
+  const prevConfiguredWidthCount = useRef(configuredWidthCount);
+  const widthConfigResetKey = configuredWidthCount < prevConfiguredWidthCount.current ? Symbol() : undefined;
+  const resetColumnWidths = widthConfigResetKey != null ? new Map() : undefined;
+
+  prevConfiguredWidthCount.current = configuredWidthCount;
+
+  const [widths] = useColWidths(visibleFields, availableWidth, frozenColumns, widthConfigResetKey);
 
   const headerHeight = useHeaderHeight({
     columnWidths: widths,
@@ -589,6 +603,8 @@ export function TableNested(props: TableNGProps & { nestedFramesField: Field<Dat
       rows={paginatedRows}
       noValue={noValue}
       renderers={{ renderRow, renderCell: renderCellRoot }}
+      columnWidths={resetColumnWidths}
+      onColumnWidthsChange={resetColumnWidths != null ? () => {} : undefined}
       onColumnResize={resizeHandler}
       onCellClick={onCellClick}
       onCellKeyDown={({ column, row }, event) => {

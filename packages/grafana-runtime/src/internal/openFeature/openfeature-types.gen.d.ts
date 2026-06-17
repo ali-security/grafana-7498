@@ -12,8 +12,12 @@ declare module "@openfeature/core" {
   export type BooleanFlagKey =
     | "lokiShardSplitting"
     | "faroSessionReplay"
+    | "queryHistory.localOnly"
+    | "queryHistory.recentQueriesUI"
     | "provisioningFolderMetadata"
     | "provisioning.readmes"
+    | "provisioning.gitConventions"
+    | "grafana.kubernetesAnnotationsClient"
     | "stateTimeline.nameAboveBars"
     | "sqlExpressionsCodeMirror"
     | "newSavedQueriesExperience"
@@ -23,13 +27,12 @@ declare module "@openfeature/core" {
     | "newLogsPanel"
     | "recentlyViewedDashboards"
     | "experimentRecentlyViewedDashboards"
-    | "createdByMeSearchFilter"
     | "otelLogsFormatting"
     | "newLogContext"
     | "plugins.useMTPlugins"
     | "dashboardSectionVariables"
+    | "globalDashboardVariables"
     | "queryEditorNext"
-    | "queryEditorNextMultiSelect"
     | "managedPluginsV2"
     | "analyticsFramework"
     | "grafana.scenesFlickeringFix"
@@ -45,7 +48,11 @@ declare module "@openfeature/core" {
     | "assistant.frontend.tools.dashboardTemplates"
     | "grafana.unifiedHomepage"
     | "alerting.syncExternalAlertmanager"
-    | "grafana.enableScopesFirstMode";
+    | "grafana.enableScopesFirstMode"
+    | "grafana.logLevelInference"
+    | "plugins.initDataSourcesAsync"
+    | "grafana.panelEditNextFeedbackEvent"
+    | "grafana.visualDesignRefresh";
   export type NumberFlagKey = never;
   export type StringFlagKey = never;
   export type ObjectFlagKey = never;

@@ -329,7 +329,7 @@ export const getActiveCellSelector = memoize((isNested?: boolean) => {
   return selectors.join(', ');
 });
 
-export const getHoverOnlyCellSelector = memoize((isNested?: boolean) => {
+const getHoverOnlyCellSelector = memoize((isNested?: boolean) => {
   if (IS_SAFARI_26) {
     return '';
   }

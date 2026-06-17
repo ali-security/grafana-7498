@@ -10,7 +10,7 @@ import { useStyles2 } from '../../../themes/ThemeContext';
 import { Pagination } from '../../Pagination/Pagination';
 import { DataLinksActionsTooltip } from '../DataLinksActionsTooltip';
 import { TableCellInspector, TableCellInspectorMode } from '../TableCellInspector';
-import { type DataLinksActionsTooltipState } from '../utils';
+import { type DataLinksActionsTooltipState } from '../cellUtils';
 
 import { EmptyTablePlaceholder } from './components/EmptyTablePlaceholder';
 import { getGridStyles, IS_SAFARI_26 } from './styles';
