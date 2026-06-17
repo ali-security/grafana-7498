@@ -279,10 +279,6 @@ const (
 	// Enables SQL Expressions, which can execute SQL queries against data source results.
 	FlagSqlExpressions = "sqlExpressions"
 
-	// FlagKubernetesAggregator
-	// Enable grafana's embedded kube-aggregator
-	FlagKubernetesAggregator = "kubernetesAggregator"
-
 	// FlagKubernetesAggregatorCapTokenAuth
 	// Enable CAP token based authentication in grafana's embedded kube-aggregator
 	FlagKubernetesAggregatorCapTokenAuth = "kubernetesAggregatorCapTokenAuth"
@@ -406,10 +402,6 @@ const (
 	// FlagPrometheusAzureOverrideAudience
 	// Deprecated. Allow override default AAD audience for Azure Prometheus endpoint. Enabled by default. This feature should no longer be used and will be removed in the future.
 	FlagPrometheusAzureOverrideAudience = "prometheusAzureOverrideAudience"
-
-	// FlagDataplaneAggregator
-	// Enable grafana dataplane aggregator
-	FlagDataplaneAggregator = "dataplaneAggregator"
 
 	// FlagAppPlatformGrpcClientAuth
 	// Enables the gRPC client to authenticate with the App Platform by using ID & access tokens

@@ -800,6 +800,10 @@ type Cfg struct {
 
 	// Secrets Management
 	SecretsManagement SecretsManagerSettings
+
+	// Experimental features
+	EnableKubernetesAggregator bool
+	EnableDataplaneAggregator  bool
 }
 
 type UnifiedStorageConfig struct {

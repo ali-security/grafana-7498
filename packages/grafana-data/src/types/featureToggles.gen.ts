@@ -504,11 +504,6 @@ export interface FeatureToggles {
   */
   sqlExpressionsCodeMirror?: boolean;
   /**
-  * Enable grafana's embedded kube-aggregator
-  * @default false
-  */
-  kubernetesAggregator?: boolean;
-  /**
   * Enable CAP token based authentication in grafana's embedded kube-aggregator
   * @default false
   */
@@ -704,11 +699,6 @@ export interface FeatureToggles {
   * @default true
   */
   prometheusAzureOverrideAudience?: boolean;
-  /**
-  * Enable grafana dataplane aggregator
-  * @default false
-  */
-  dataplaneAggregator?: boolean;
   /**
   * Allows authenticated API calls in actions
   * @default false
