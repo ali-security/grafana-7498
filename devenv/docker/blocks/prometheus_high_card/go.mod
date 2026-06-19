@@ -3,8 +3,8 @@ module high-card
 go 1.23.7
 
 require (
-	github.com/prometheus/client_golang v1.20.2
-	golang.org/x/exp v0.0.0-20240823005443-9b4947da3948
+	github.com/prometheus/client_golang v1.22.0
+	golang.org/x/exp v0.0.0-20250506013437-ce4c2cf36ca6
 )
 
 require (
@@ -13,8 +13,8 @@ require (
 	github.com/klauspost/compress v1.17.9 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
-	github.com/prometheus/common v0.55.0 // indirect
-	github.com/prometheus/procfs v0.15.1 // indirect
-	golang.org/x/sys v0.30.0 // indirect
-	google.golang.org/protobuf v1.34.2 // indirect
+	github.com/prometheus/common v0.62.0 // indirect
+	github.com/prometheus/procfs v0.16.1 // indirect
+	golang.org/x/sys v0.33.0 // indirect
+	google.golang.org/protobuf v1.36.6 // indirect
 )

@@ -34,8 +34,8 @@ require (
 	golang.org/x/text v0.22.0 // indirect; @grafana/grafana-backend-group
 	golang.org/x/time v0.9.0 // indirect; @grafana/grafana-backend-group
 	google.golang.org/api v0.220.0 // @grafana/grafana-backend-group
-	google.golang.org/grpc v1.70.0 // indirect; @grafana/plugins-platform-backend
-	google.golang.org/protobuf v1.36.5 // indirect; @grafana/plugins-platform-backend
+	google.golang.org/grpc v1.72.1 // indirect; @grafana/plugins-platform-backend
+	google.golang.org/protobuf v1.36.6 // indirect; @grafana/plugins-platform-backend
 	gopkg.in/yaml.v3 v3.0.1 // @grafana/alerting-backend
 )
 
@@ -103,6 +103,7 @@ require (
 	github.com/moby/docker-image-spec v1.3.1 // indirect
 	github.com/moby/term v0.5.0 // indirect
 	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
+	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/sosodev/duration v1.2.0 // indirect
 	github.com/vektah/gqlparser/v2 v2.5.20 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
@@ -114,9 +115,9 @@ require (
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.34.0 // indirect
 	go.opentelemetry.io/otel/log v0.4.0 // indirect
 	go.opentelemetry.io/otel/sdk/log v0.4.0 // indirect
-	go.opentelemetry.io/otel/sdk/metric v1.32.0 // indirect
-	go.opentelemetry.io/proto/otlp v1.5.0 // indirect
-	golang.org/x/exp v0.0.0-20240909161429-701f63a606c0 // indirect
+	go.opentelemetry.io/otel/sdk/metric v1.35.0 // indirect
+	go.opentelemetry.io/proto/otlp v1.6.0 // indirect
+	golang.org/x/exp v0.0.0-20250506013437-ce4c2cf36ca6 // indirect
 	gotest.tools/v3 v3.5.1 // indirect
 )
 
