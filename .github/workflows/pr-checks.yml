@@ -27,13 +27,13 @@ permissions:
 
 jobs:
   main:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: github.event.pull_request.draft == false
     steps:
       - name: Checkout Actions
         uses: actions/checkout@v4
         with:
-          repository: "grafana/grafana-github-actions"
+          repository: grafana/grafana-github-actions
           path: ./actions
           ref: main
       - name: Install Actions

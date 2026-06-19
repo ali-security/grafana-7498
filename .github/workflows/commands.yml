@@ -18,11 +18,11 @@ permissions:
 
 jobs:
   config:
-    runs-on: "ubuntu-latest"
+    runs-on: ubuntu-24.04
     outputs:
       has-secrets: ${{ steps.check.outputs.has-secrets }}
     steps:
-      - name: "Check for secrets"
+      - name: Check for secrets
         id: check
         shell: bash
         run: |
@@ -33,9 +33,9 @@ jobs:
   main:
     needs: config
     if: needs.config.outputs.has-secrets
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - name: "Get vault secrets"
+      - name: Get vault secrets
         id: vault-secrets
         uses: grafana/shared-workflows/actions/get-vault-secrets@main
         with:
@@ -44,7 +44,7 @@ jobs:
             GH_APP_ID=plugins_platform_issue_commands_github_bot:app_id
             GH_APP_PEM=plugins_platform_issue_commands_github_bot:app_pem
 
-      - name: "Generate token"
+      - name: Generate token
         id: generate_token
         uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92
         with:
@@ -54,7 +54,7 @@ jobs:
       - name: Checkout Actions
         uses: actions/checkout@v4
         with:
-          repository: "grafana/grafana-github-actions"
+          repository: grafana/grafana-github-actions
           path: ./actions
           ref: main
 

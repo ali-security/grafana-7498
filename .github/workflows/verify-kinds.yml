@@ -1,26 +1,26 @@
-name: "verify-kinds"
+name: verify-kinds
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main, master]
     paths:
       - '**/*.cue'
 
 jobs:
   main:
-    runs-on: "ubuntu-latest"
+    runs-on: ubuntu-24.04
     steps:
-      - name: "Checkout Grafana repo"
-        uses: "actions/checkout@v4"
+      - name: Checkout Grafana repo
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: "Setup Go"
-        uses: "actions/setup-go@v4"
+      - name: Setup Go
+        uses: actions/setup-go@v4
         with:
           go-version-file: go.mod
 
-      - name: "Verify kinds"
+      - name: Verify kinds
         run: go run .github/workflows/scripts/kinds/verify-kinds.go
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

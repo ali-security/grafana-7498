@@ -5,7 +5,7 @@ on:
 
 jobs:
   generate-report:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -13,8 +13,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
-          cache: 'yarn'
+          node-version-file: .nvmrc
+          cache: yarn
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile

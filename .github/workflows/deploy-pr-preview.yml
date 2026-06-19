@@ -7,11 +7,11 @@ on:
       - synchronize
       - closed
     paths:
-      - "docs/sources/**"
+      - docs/sources/**
 
 jobs:
   deploy-pr-preview:
-    if: "!github.event.pull_request.head.repo.fork"
+    if: '!github.event.pull_request.head.repo.fork'
     uses: grafana/writers-toolkit/.github/workflows/deploy-preview.yml@main
     with:
       branch: ${{ github.head_ref }}

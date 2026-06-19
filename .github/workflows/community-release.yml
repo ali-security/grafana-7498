@@ -33,7 +33,7 @@ permissions:
 
 jobs:
   main:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Run community-release (manually invoked)
         uses: grafana/grafana-github-actions-go/community-release@main

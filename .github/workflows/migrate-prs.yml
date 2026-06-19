@@ -1,14 +1,14 @@
 name: Migrate open PRs
 # Migrate open PRs from a superseded release branch to the current release branch and notify authors
-on: 
+on:
   workflow_call:
     inputs:
       from:
-        description: 'The base branch to check for open PRs'
+        description: The base branch to check for open PRs
         required: true
         type: string
       to:
-        description: 'The base branch to migrate open PRs to'
+        description: The base branch to migrate open PRs to
         required: true
         type: string
       ownerRepo:
@@ -23,11 +23,11 @@ on:
   workflow_dispatch:
     inputs:
       from:
-        description: 'The base branch to check for open PRs'
+        description: The base branch to check for open PRs
         required: true
         type: string
       to:
-        description: 'The base branch to migrate open PRs to'
+        description: The base branch to migrate open PRs to
         required: true
         type: string
       ownerRepo:
@@ -42,9 +42,9 @@ on:
 
 jobs:
   main:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - name: "Generate token"
+      - name: Generate token
         id: generate_token
         uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92
         with:
@@ -57,4 +57,4 @@ jobs:
           ownerRepo: ${{ inputs.ownerRepo }}
           from: ${{ inputs.from }}
           to: ${{ inputs.to }}
-          binary_release_tag: 'dev'
+          binary_release_tag: dev

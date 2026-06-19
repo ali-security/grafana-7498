@@ -9,7 +9,7 @@ concurrency:
 
 jobs:
   update-grafana:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
       pull-requests: write
@@ -30,7 +30,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@f111f3307d8850f501ac008e886eec1fd1932a34 # 5.3.0
         with:
-          "go-version-file": "go.mod"
+          go-version-file: go.mod
 
       - name: Extract current commit hash of alerting module
         id: current-commit
@@ -59,10 +59,10 @@ jobs:
         run: |
           FROM_COMMIT="${{ steps.current-commit.outputs.from_commit }}"
           TO_COMMIT="${{ steps.latest-commit.outputs.to_commit }}"
-          
+
           # Compare just the length of the shorter hash
           SHORT_TO_COMMIT="${TO_COMMIT:0:${#FROM_COMMIT}}"
-          
+
           if [ "$FROM_COMMIT" = "$SHORT_TO_COMMIT" ]; then
             echo "Current version ($FROM_COMMIT) is already at latest ($SHORT_TO_COMMIT). No update needed."
             exit 0
@@ -77,13 +77,13 @@ jobs:
           # get all commits that contains 'Alerting:' in the message          
           ALERTING_COMMITS=$(gh api repos/grafana/alerting/compare/${{ steps.current-commit.outputs.from_commit }}...${{ steps.latest-commit.outputs.to_commit }} \
             --jq '.commits[].commit.message | split("\n")[0]') || true
-          
+
           # Use printf instead of echo -e for better multiline handling
           printf "%s\n" "$ALERTING_COMMITS"
-          
+
           # make the list for markdown and replace PR numbers with links
           ALERTING_COMMITS_FORMATTED=$(echo "$ALERTING_COMMITS" | while read -r line; do echo "- $line" | sed -E 's/\(#([0-9]+)\)/[#\1](https:\/\/github.com\/grafana\/grafana\/pull\/\1)/g'; done)
-          
+
           echo "alerting_commits<<EOF" >> $GITHUB_OUTPUT
           echo "$ALERTING_COMMITS_FORMATTED" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -102,7 +102,7 @@ jobs:
             GITHUB_APP_ID=alerting-team:app-id
             GITHUB_APP_PRIVATE_KEY=alerting-team:private-key
 
-      - name: "Generate token"
+      - name: Generate token
         id: generate_token
         uses: actions/create-github-app-token@0d564482f06ca65fa9e77e2510873638c82206f2 # 1.11.5
         with:
@@ -113,8 +113,8 @@ jobs:
         uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # 7.0.6
         id: create-pr
         with:
-          token: '${{ steps.generate_token.outputs.token }}'
-          title:  'Alerting: Update alerting module to ${{ steps.latest-commit.outputs.to_commit }}'
+          token: ${{ steps.generate_token.outputs.token }}
+          title: 'Alerting: Update alerting module to ${{ steps.latest-commit.outputs.to_commit }}'
           branch: alerting/update-alerting-module
           delete-branch: true
           body: |
@@ -123,7 +123,7 @@ jobs:
             Compare changes: https://github.com/grafana/alerting/compare/${{ steps.current-commit.outputs.from_commit }}...${{ steps.latest-commit.outputs.to_commit }}
             <details>
             <summary>Commits</summary>
-            
+
             ${{ steps.check-commits.outputs.alerting_commits }}
 
             </details>

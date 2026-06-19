@@ -2,12 +2,9 @@ name: Crowdin Download Action
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 0 * * *"
-
 jobs:
   download-sources-from-crowdin:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     permissions:
       contents: write # needed to commit changes into the PR
@@ -39,22 +36,22 @@ jobs:
           localization_branch_name: i18n_crowdin_translations
           create_pull_request: true
           pull_request_title: 'I18n: Download translations from Crowdin'
-          pull_request_body:  |
+          pull_request_body: |
             :robot: Automatic download of translations from Crowdin.
 
             This runs once per day and will merge automatically if all the required checks pass.
 
             If there's a conflict, close the pull request and **delete the branch**.
             You can then either wait for the schedule to trigger a new PR, or rerun the action manually.
-          pull_request_labels: 'area/frontend, area/internationalization, no-changelog, no-backport'
-          pull_request_base_branch_name: 'main'
-          base_url: 'https://grafana.api.crowdin.com'
-          config: 'crowdin.yml'
-          source: 'public/locales/en-US/grafana.json'
-          translation: 'public/locales/%locale%/%original_file_name%'
+          pull_request_labels: area/frontend, area/internationalization, no-changelog, no-backport
+          pull_request_base_branch_name: main
+          base_url: https://grafana.api.crowdin.com
+          config: crowdin.yml
+          source: public/locales/en-US/grafana.json
+          translation: public/locales/%locale%/%original_file_name%
           # Magic details of the github-actions bot user, to pass CLA checks
-          github_user_name: "github-actions[bot]"
-          github_user_email: "41898282+github-actions[bot]@users.noreply.github.com"
+          github_user_name: github-actions[bot]
+          github_user_email: 41898282+github-actions[bot]@users.noreply.github.com
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}

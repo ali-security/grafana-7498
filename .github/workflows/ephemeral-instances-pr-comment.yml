@@ -1,4 +1,4 @@
-name: 'Ephemeral instances'
+name: Ephemeral instances
 on:
   issue_comment:
     types: [created]
@@ -6,11 +6,11 @@ on:
     types: [closed]
 jobs:
   config:
-    runs-on: "ubuntu-latest"
+    runs-on: ubuntu-24.04
     outputs:
       has-secrets: ${{ steps.check.outputs.has-secrets }}
     steps:
-      - name: "Check for secrets"
+      - name: Check for secrets
         id: check
         shell: bash
         run: |
@@ -27,10 +27,9 @@ jobs:
 
   handle-pull-request-event:
     needs: config
-    if: needs.config.outputs.has-secrets &&
-        ${{ github.event.issue.pull_request && (startsWith(github.event.comment.body, '/deploy-to-hg') || github.event.action == 'closed') }}
+    if: needs.config.outputs.has-secrets && ${{ github.event.issue.pull_request && (startsWith(github.event.comment.body, '/deploy-to-hg') || github.event.action == 'closed') }}
     runs-on:
-      labels: ubuntu-latest-8-cores
+      labels: ubuntu-24.04-8-cores
     continue-on-error: true
     steps:
       - name: Generate a GitHub app installation token
@@ -51,11 +50,11 @@ jobs:
       - name: build and deploy ephemeral instance
         uses: ./ephemeral
         with:
-          github-token:  ${{ steps.generate_token.outputs.token }}
+          github-token: ${{ steps.generate_token.outputs.token }}
           gcom-host: ${{ secrets.EI_GCOM_HOST }}
           gcom-token: ${{ secrets.EI_GCOM_TOKEN }}
-          registry: "${{ secrets.EI_EPHEMERAL_INSTANCES_REGISTRY }}"
-          gcp-service-account-key: "${{ secrets.EI_GCP_SERVICE_ACCOUNT_KEY_BASE64 }}"
-          ephemeral-org-id: "${{ secrets.EI_EPHEMERAL_ORG_ID }}"
+          registry: ${{ secrets.EI_EPHEMERAL_INSTANCES_REGISTRY }}
+          gcp-service-account-key: ${{ secrets.EI_GCP_SERVICE_ACCOUNT_KEY_BASE64 }}
+          ephemeral-org-id: ${{ secrets.EI_EPHEMERAL_ORG_ID }}
           oss-or-enterprise: oss
           verbose: true

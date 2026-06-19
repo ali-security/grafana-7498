@@ -1,12 +1,12 @@
 name: Documentation CI
 on:
   pull_request:
-    branches: ["main"]
-    paths: ["docs/sources/**"]
+    branches: [main, master]
+    paths: [docs/sources/**]
   workflow_dispatch:
 jobs:
   vale:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container:
       image: grafana/vale:latest
     steps:
@@ -15,5 +15,5 @@ jobs:
           persist-credentials: false
       - uses: grafana/writers-toolkit/vale-action@vale-action/v1
         with:
-          filter: '.Name in ["Grafana.WordList", "Grafana.Spelling", "Grafana.ProductPossessives"]'
+          filter: .Name in ["Grafana.WordList", "Grafana.Spelling", "Grafana.ProductPossessives"]
           token: ${{ secrets.GITHUB_TOKEN }}

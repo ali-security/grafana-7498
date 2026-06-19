@@ -18,8 +18,8 @@ on:
     types:
     - closed
     branches:
-    - 'main'
-    - 'release-*.*.*'
+    - main
+    - release-*.*.*
 
 jobs:
   setup:
@@ -30,7 +30,7 @@ jobs:
       release_branch: ${{ steps.output.outputs.release_branch }}
       dry_run: ${{ steps.output.outputs.dry_run }}
       latest: ${{ steps.output.outputs.latest }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       # The github-release action expects a `LATEST` value of a string of either '1' or '0'
     - if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -62,7 +62,7 @@ jobs:
       GRAFANA_DELIVERY_BOT_APP_ID: ${{ secrets.GRAFANA_DELIVERY_BOT_APP_ID }}
       GRAFANA_DELIVERY_BOT_APP_PEM: ${{ secrets.GRAFANA_DELIVERY_BOT_APP_PEM }}
     with:
-      ownerRepo: 'grafana/grafana'
+      ownerRepo: grafana/grafana
       source: ${{ needs.setup.outputs.release_branch }}
   create_next_release_branch_enterprise:
     name: Create next release branch (Grafana Enterprise)
@@ -72,30 +72,30 @@ jobs:
       GRAFANA_DELIVERY_BOT_APP_ID: ${{ secrets.GRAFANA_DELIVERY_BOT_APP_ID }}
       GRAFANA_DELIVERY_BOT_APP_PEM: ${{ secrets.GRAFANA_DELIVERY_BOT_APP_PEM }}
     with:
-      ownerRepo: 'grafana/grafana-enterprise'
+      ownerRepo: grafana/grafana-enterprise
       source: ${{ needs.setup.outputs.release_branch }}
   migrate_prs_grafana:
     needs:
-      - setup
-      - create_next_release_branch_grafana
+    - setup
+    - create_next_release_branch_grafana
     uses: ./.github/workflows/migrate-prs.yml
     secrets:
       GRAFANA_DELIVERY_BOT_APP_ID: ${{ secrets.GRAFANA_DELIVERY_BOT_APP_ID }}
       GRAFANA_DELIVERY_BOT_APP_PEM: ${{ secrets.GRAFANA_DELIVERY_BOT_APP_PEM }}
     with:
-      ownerRepo: 'grafana/grafana'
+      ownerRepo: grafana/grafana
       from: ${{ needs.setup.outputs.release_branch }}
       to: ${{ needs.create_next_release_branch_grafana.outputs.branch }}
   migrate_prs_enterprise:
     needs:
-      - setup
-      - create_next_release_branch_enterprise
+    - setup
+    - create_next_release_branch_enterprise
     uses: ./.github/workflows/migrate-prs.yml
     secrets:
       GRAFANA_DELIVERY_BOT_APP_ID: ${{ secrets.GRAFANA_DELIVERY_BOT_APP_ID }}
       GRAFANA_DELIVERY_BOT_APP_PEM: ${{ secrets.GRAFANA_DELIVERY_BOT_APP_PEM }}
     with:
-      ownerRepo: 'grafana/grafana-enterprise'
+      ownerRepo: grafana/grafana-enterprise
       from: ${{ needs.setup.outputs.release_branch }}
       to: ${{ needs.create_next_release_branch_enterprise.outputs.branch }}
   post_changelog_on_forum:
@@ -119,7 +119,7 @@ jobs:
       latest: ${{ needs.setup.outputs.latest }}
   post_on_slack:
     needs: setup
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - run: |
         echo announce on slack that ${{ needs.setup.outputs.version }} has been released

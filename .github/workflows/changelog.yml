@@ -5,15 +5,15 @@ on:
       previous_version:
         type: string
         required: false
-        description: 'The release version (semver, git tag, branch or commit) to use for comparison'
+        description: The release version (semver, git tag, branch or commit) to use for comparison
       version:
         type: string
         required: true
-        description: 'Target release version (semver, git tag, branch or commit)'
+        description: Target release version (semver, git tag, branch or commit)
       target:
         required: true
         type: string
-        description: 'The base branch that these changes are being merged into'
+        description: The base branch that these changes are being merged into
       dry_run:
         required: false
         default: false
@@ -33,15 +33,15 @@ on:
       previous_version:
         type: string
         required: false
-        description: 'The release version (semver, git tag, branch or commit) to use for comparison'
+        description: The release version (semver, git tag, branch or commit) to use for comparison
       version:
         type: string
         required: true
-        description: 'Target release version (semver, git tag, branch or commit)'
+        description: Target release version (semver, git tag, branch or commit)
       target:
         required: true
         type: string
-        description: 'The base branch that these changes are being merged into'
+        description: The base branch that these changes are being merged into
       dry_run:
         required: false
         default: false
@@ -57,18 +57,18 @@ permissions:
 
 jobs:
   main:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
     steps:
-      - name: "Generate token"
+      - name: Generate token
         id: generate_token
         uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92
         with:
           app_id: ${{ secrets.GRAFANA_DELIVERY_BOT_APP_ID }}
           private_key: ${{ secrets.GRAFANA_DELIVERY_BOT_APP_PEM }}
-      - name: "Checkout Grafana repo"
-        uses: "actions/checkout@v4"
+      - name: Checkout Grafana repo
+        uses: actions/checkout@v4
         with:
           ref: main
           sparse-checkout: |
@@ -83,14 +83,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      - name: "Configure git user"
+      - name: Configure git user
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local --add --bool push.autoSetupRemote true
-      - name: "Create branch"
+      - name: Create branch
         run: git checkout -b "changelog/${{ github.run_id }}/${{ inputs.version }}"
-      - name: "Generate changelog"
+      - name: Generate changelog
         id: changelog
         uses: ./.github/workflows/actions/changelog
         with:
@@ -98,7 +98,7 @@ jobs:
           github_token: ${{ steps.generate_token.outputs.token }}
           target: v${{ inputs.version }}
           output_file: changelog_items.md
-      - name: "Patch CHANGELOG.md"
+      - name: Patch CHANGELOG.md
         run: |
           # Prepare CHANGELOG.md content with version delimiters
           (
@@ -128,14 +128,14 @@ jobs:
 
           git diff CHANGELOG.md
 
-      - name: "Prettify CHANGELOG.md"
+      - name: Prettify CHANGELOG.md
         run: npx prettier --write CHANGELOG.md
-      - name: "Commit changelog changes"
+      - name: Commit changelog changes
         run: git add CHANGELOG.md && git commit --allow-empty -m "Update changelog" CHANGELOG.md
-      - name: "git push"
+      - name: git push
         if: ${{ inputs.dry_run }} != true
         run: git push
-      - name: "Create changelog PR"
+      - name: Create changelog PR
         run: >
           gh pr create \
             --dry-run=${{ inputs.dry_run }} \

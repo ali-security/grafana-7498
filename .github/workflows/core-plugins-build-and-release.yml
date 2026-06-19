@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       plugin_id:
-        description: "ID of the plugin you want to publish"
+        description: ID of the plugin you want to publish
         required: true
         type: choice
         options:
@@ -34,7 +34,7 @@ permissions:
 jobs:
   build-and-publish:
     name: Build and publish ${{ inputs.plugin_id }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       type: ${{ steps.get_dir.outputs.dir }}
       has_backend: ${{ steps.check_backend.outputs.has_backend }}
@@ -53,12 +53,12 @@ jobs:
             PLUGINS_GOOGLE_CREDENTIALS=core-plugins-build-and-release:PLUGINS_GOOGLE_CREDENTIALS
             PLUGINS_GRAFANA_API_KEY=core-plugins-build-and-release:PLUGINS_GRAFANA_API_KEY
             PLUGINS_GCOM_TOKEN=core-plugins-build-and-release:PLUGINS_GCOM_TOKEN
-      - name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v2'
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
         with:
-          credentials_json: '${{ env.PLUGINS_GOOGLE_CREDENTIALS }}'
-      - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v2'
+          credentials_json: ${{ env.PLUGINS_GOOGLE_CREDENTIALS }}
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
       - name: Setup nodejs environment
         uses: actions/setup-node@v4
         with:
@@ -158,7 +158,7 @@ jobs:
         if: steps.check_backend.outputs.has_backend == 'true'
         shell: bash
         env:
-          VERSION: ${{ steps.build_frontend.outputs.version }}  
+          VERSION: ${{ steps.build_frontend.outputs.version }}
         run: |
           make build-plugin-go PLUGIN_ID=${{ inputs.plugin_id }}
       - name: package
@@ -172,7 +172,7 @@ jobs:
       - name: Check existing release
         env:
           GCOM_TOKEN: ${{ env.PLUGINS_GCOM_TOKEN }}
-          VERSION: ${{ steps.build_frontend.outputs.version }}  
+          VERSION: ${{ steps.build_frontend.outputs.version }}
         run: |
           api_res=$(curl -X 'GET' -H "Authorization: Bearer $GCOM_TOKEN" \
             '${{ env.GCOM_API}}/api/plugins/${{ inputs.plugin_id }}?version=$VERSION' \
@@ -193,7 +193,7 @@ jobs:
       - name: Publish release to Google Cloud Storage
         working-directory: ${{ steps.get_dir.outputs.dir }}
         env:
-          VERSION: ${{ steps.build_frontend.outputs.version }}  
+          VERSION: ${{ steps.build_frontend.outputs.version }}
         run: |
           echo "Publish release to Google Cloud Storage:"
           touch ci/packages/windows ci/packages/darwin ci/packages/linux ci/packages/any
@@ -206,7 +206,7 @@ jobs:
         working-directory: ${{ steps.get_dir.outputs.dir }}
         env:
           GCOM_TOKEN: ${{ env.PLUGINS_GCOM_TOKEN }}
-          VERSION: ${{ steps.build_frontend.outputs.version }}  
+          VERSION: ${{ steps.build_frontend.outputs.version }}
         run: |
           echo "Publish new plugin version on grafana.com:"
           echo "Plugin version: ${VERSION}"

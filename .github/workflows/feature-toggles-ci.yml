@@ -3,13 +3,13 @@ name: Feature toggles CI
 on:
   pull_request:
     paths:
-      - 'pkg/services/featuremgmt/toggles_gen_test.go'
-      - 'pkg/services/featuremgmt/registry.go'
-      - 'docs/sources/setup-grafana/configure-grafana/feature-toggles/index.md'
+      - pkg/services/featuremgmt/toggles_gen_test.go
+      - pkg/services/featuremgmt/registry.go
+      - docs/sources/setup-grafana/configure-grafana/feature-toggles/index.md
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
@@ -18,7 +18,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: 'go.mod'
+          go-version-file: go.mod
           cache: true
 
       - name: Run feature toggle tests
